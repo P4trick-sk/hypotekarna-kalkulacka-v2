@@ -72,7 +72,7 @@ Bez `DATABASE_URL` funguje výpočet, grafy aj CSV; ukladanie a zdieľanie scen�
 
 ## Pripojenie k Supabase
 
-API sa nepripája `service_role` kľúčom, ale vlastnou Postgres rolou `hk_api`, ktorá smie len do tabuliek kalkulačky (migrácia [`api_role`](supabase/migrations/20261022100000_api_role.sql)).
+API sa nepripája `service_role` kľúčom, ale vlastnou Postgres rolou `hk_api`, ktorá smie len do tabuliek kalkulačky (migrácia [`api_role`](supabase/migrations/20261022072603_api_role.sql)).
 
 1. Aplikuj migrácie zo `supabase/migrations/` (cez Supabase MCP `apply_migration` alebo `supabase db push`).
 2. Vygeneruj heslo a jeho SCRAM hash **lokálne** (do Supabase ide len hash):
