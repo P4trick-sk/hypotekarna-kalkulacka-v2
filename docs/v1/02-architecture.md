@@ -53,8 +53,8 @@ hypotekarna-kalkulacka-v2/
 │   │   ├── models.py       LoanInput, Payment, ScheduleResult (dataclasses)
 │   │   ├── validation.py   validate(LoanInput) -> list[ValidationError]
 │   │   ├── amortization.py monthly_payment(), build_schedule()
-│   │   ├── schedule.py     yearly_rollup(), compare(with_extra, without_extra)
-│   │   ├── summary.py      summary(), sooner_text()
+│   │   ├── schedule.py     yearly_rollup(), compare(), sooner_text()
+│   │   ├── summary.py      summary(), calculate()
 │   │   ├── export.py       to_csv()
 │   │   └── __main__.py     CLI: python -m calc --price 300000 ...
 │   └── tests/
@@ -190,7 +190,9 @@ Vlastné Python skripty bez externých závislostí (len štandardná knižnica:
 | | `build_schedule(inp, extra=None)` | Mesačné riadky; posledná splátka = zvyšný zostatok |
 | `schedule.py` | `yearly_rollup(rows)` | Súčty po kalendárnych rokoch |
 | | `compare(with_extra, baseline)` | Ušetrené úroky, počet mesiacov skôr |
+| | `sooner_text(months)` | „o 7 rokov a 6 mesiacov skôr“ (slovenské skloňovanie) |
 | `summary.py` | `summary(inp, result)` | Polia pre F4 |
+| | `calculate(inp)` | Celý výpočet: harmonogram, súhrn, ročný prehľad, porovnanie |
 | `export.py` | `to_csv(rows) -> str` | Hlavička: `payment_no,date,payment,principal,interest,balance` |
 | `__main__.py` | CLI | `python -m calc --price 300000 --down 60000 --rate 4.5 --years 30 [--extra 200] [--csv]` |
 

@@ -4,19 +4,19 @@ Plán je rozdelený na fázy, ktoré zodpovedajú hodinám na vyučovaní (sessi
 
 ## Fáza 0 – Príprava (session 1)
 
-- [ ] Repozitár, `README.md`, `CLAUDE.md`, dokumentácia `docs/v1/01–05`
-- [ ] Kostra adresárov `frontend/`, `api/`, `supabase/`
-- [ ] `.gitignore`, `.env.example`, `.editorconfig`
+- [x] Repozitár, `README.md`, `CLAUDE.md`, dokumentácia `docs/v1/01–05`
+- [x] Kostra adresárov `frontend/`, `api/`, `supabase/`
+- [x] `.gitignore`, `.env.example`, `.editorconfig`
 
 **Hotovo, keď:** repo je na GitHube a dokumentácia je schválená.
 
 ## Fáza 1 – Výpočtová logika `calc` (session 2–3)
 
-- [ ] `models.py`, `validation.py` + testy V01–V09
-- [ ] `amortization.py` + testy C01–C11, C15–C16
-- [ ] `schedule.py`, `summary.py` + testy C08, C09, C12, C13
-- [ ] `export.py` + test C14
-- [ ] CLI `python -m calc`
+- [x] `models.py`, `validation.py` + testy V01–V09
+- [x] `amortization.py` + testy C01–C11, C15–C16
+- [x] `schedule.py`, `summary.py` + testy C08, C09, C12, C13
+- [x] `export.py` + test C14
+- [x] CLI `python -m calc`
 
 **Hotovo, keď:** `pytest api/tests/calc` je zelený a CLI vypíše súhrn pre predvolené hodnoty.
 
