@@ -10,8 +10,8 @@ Kritické posúdenie `01-functional.md` a `02-architecture.md` pred začatím im
 | R2 | `client_id` bez prihlásenia | Je to tajomstvo nositeľa; ak unikne (napr. pri zdieľaní obrazovky DevTools), cudzí človek vidí a maže scenáre | Nikdy ho nezobrazovať v UI ani v zdieľacom odkaze; `404` namiesto `403` pre cudzie scenáre. Prihlásenie zvážiť vo v2 dokumentácie. | prijaté |
 | R3 | Strata scenárov | Vymazanie dát prehliadača = strata prístupu k scenárom | Vedomé obmedzenie, uvedené v F11 a v UI (tooltip pri „Moje scenáre“) | prijaté |
 | R4 | Uhádnuteľnosť zdieľacieho odkazu | Krátky slug sa dá prehľadať | 10 znakov base62 ≈ 59 bitov, generované cez `secrets`; rate limit na `/share` | prijaté |
-| R5 | Zneužitie API (spam scenárov, logu) | Plná DB na free tieri | Limit 50 scenárov na klienta, throttling logu (F13), jednoduchý rate limit (`slowapi`, 60 req/min/IP) | prijaté |
-| R6 | `service_role` kľúč | Únik = plný prístup k DB | Len v env API, nikdy vo frontende ani v gite; `.env` v `.gitignore`, `.env.example` bez hodnôt | prijaté |
+| R5 | Zneužitie API (spam scenárov, logu) | Plná DB na free tieri | Limit 50 scenárov na klienta, throttling logu (F13), jednoduchý rate limit (`slowapi`, 300 req/min/IP – posuvníky generujú veľa požiadaviek) | prijaté |
+| R6 | Prístupové údaje API k DB | Únik = prístup k dátam | Namiesto `service_role` kľúča (plný prístup, obchádza RLS) vlastná rola `hk_api` len na tabuľky kalkulačky; heslo len v `api/.env` (v `.gitignore`), do Supabase ide iba SCRAM hash | vyriešené |
 | R7 | Float vs. Decimal | Rozdiely v centoch medzi frontendom a API | Frontend nepočíta; sumy v JSON ako reťazce | prijaté |
 | R8 | Zaokrúhľovanie poslednej splátky | Pri zaokrúhlenej splátke vzniká 361. mini-splátka | Podmienka `k == n` v algoritme; test C01 | prijaté |
 | R9 | Osobné údaje v logu | GDPR | Log bez `client_id` a IP; retencia 90 dní | prijaté |

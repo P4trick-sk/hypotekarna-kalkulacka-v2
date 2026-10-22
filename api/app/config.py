@@ -8,8 +8,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    supabase_url: str = ""
-    supabase_service_role_key: str = ""
+    # postgresql://hk_api.<project-ref>:<heslo>@<pooler-host>:5432/postgres?sslmode=require
+    database_url: str = ""
     cors_origins: str = "http://localhost:5173"
     public_app_url: str = "http://localhost:5173"
     calc_log_enabled: bool = True
@@ -21,7 +21,7 @@ class Settings(BaseSettings):
 
     @property
     def db_configured(self) -> bool:
-        return bool(self.supabase_url and self.supabase_service_role_key)
+        return bool(self.database_url)
 
 
 @lru_cache

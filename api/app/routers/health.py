@@ -17,6 +17,6 @@ def health(settings: SettingsDep) -> dict[str, str]:
     try:
         get_scenario_repo(settings).ping()
     except Exception:
-        logger.exception("Supabase ping zlyhal")
+        logger.exception("Ping databázy zlyhal")
         return {"status": "ok", "db": "error"}
     return {"status": "ok", "db": "ok"}

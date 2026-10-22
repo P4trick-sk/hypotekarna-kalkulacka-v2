@@ -15,17 +15,17 @@ from .schemas.errors import ApiError
 def get_log_repo(settings: Annotated[Settings, Depends(get_settings)]) -> LogRepo:
     if not (settings.calc_log_enabled and settings.db_configured):
         return NoopLogRepo()
-    from .db.client import SupabaseLogRepo, get_client
+    from .db.postgres import PostgresLogRepo, get_pool
 
-    return SupabaseLogRepo(get_client(settings))
+    return PostgresLogRepo(get_pool(settings.database_url))
 
 
 def get_scenario_repo(settings: Annotated[Settings, Depends(get_settings)]) -> ScenarioRepo:
     if not settings.db_configured:
-        raise DatabaseUnavailable("Supabase nie je nakonfigurovaný (api/.env).")
-    from .db.client import SupabaseScenarioRepo, get_client
+        raise DatabaseUnavailable("Databáza nie je nakonfigurovaná (DATABASE_URL v api/.env).")
+    from .db.postgres import PostgresScenarioRepo, get_pool
 
-    return SupabaseScenarioRepo(get_client(settings))
+    return PostgresScenarioRepo(get_pool(settings.database_url))
 
 
 def get_client_id(x_client_id: Annotated[str | None, Header()] = None) -> UUID:

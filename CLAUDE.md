@@ -32,7 +32,8 @@ Zdroj pravdy o tom, čo stavať: `docs/v1/01-functional.md` (čo), `docs/v1/02-a
 - `calc` nesmie importovať FastAPI, Pydantic ani Supabase.
 - Peniaze: `Decimal` v Pythone, `numeric(14,2)` v DB, reťazce v JSON. Nikdy `float`.
 - Frontend nevolá Supabase priamo a nemá žiadny Supabase kľúč.
-- `SUPABASE_SERVICE_ROLE_KEY` nikdy nepatrí do gitu ani do frontendu.
+- API sa pripája k DB ako rola `hk_api` (`DATABASE_URL` v `api/.env`); heslo nikdy nepatrí do gitu ani do frontendu.
+- Nové tabuľky potrebujú v migrácii `grant` a RLS politiku pre `hk_api`, inak k nim API nemá prístup.
 - Každá zmena schémy DB = nová migrácia v `supabase/migrations/`, nikdy úprava starej.
 - Testy píš podľa ID z `03-test-scenarios.md` (`test_C01_...`, `test_A12_...`).
 - Pri zmene správania najprv uprav dokumentáciu v `docs/v1/`, potom kód.
@@ -43,7 +44,8 @@ Zdroj pravdy o tom, čo stavať: `docs/v1/01-functional.md` (čo), `docs/v1/02-a
 ```bash
 # API + calc
 cd api && uv sync
-uv run pytest
+uv run pytest                 # unit testy (bez DB)
+uv run pytest -m integration  # proti skutočnej Supabase DB
 uv run ruff check . && uv run mypy --strict app calc
 uv run uvicorn app.main:app --reload
 uv run python -m calc --price 300000 --down 60000 --rate 4.5 --years 30

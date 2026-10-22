@@ -39,8 +39,7 @@ class FakeLogRepo:
 def settings() -> Settings:
     return Settings(
         _env_file=None,  # type: ignore[call-arg]
-        supabase_url="",
-        supabase_service_role_key="",
+        database_url="",
         cors_origins="http://localhost:5173",
         rate_limit="10000/minute",
     )

@@ -3,7 +3,7 @@
 ## 1. Prehľad
 
 ```
-┌────────────────────────┐   HTTPS / JSON   ┌──────────────────────────────┐   PostgREST / SQL   ┌──────────────────┐
+┌────────────────────────┐   HTTPS / JSON   ┌──────────────────────────────┐   SQL cez pooler    ┌──────────────────┐
 │  Frontend (React)      │ ───────────────▶ │  API (FastAPI)               │ ──────────────────▶ │  Supabase        │
 │  Vite + TypeScript     │ ◀─────────────── │  ├─ routers/   (HTTP vrstva) │ ◀────────────────── │  PostgreSQL      │
 │  - vstupy, validácia   │                  │  ├─ schemas/   (Pydantic)    │                     │  - scenarios     │
@@ -16,7 +16,7 @@ Zásady:
 
 1. **Výpočet je len v Pythone.** Frontend nič nepočíta okrem parsovania čísel a validácie pre UX.
 2. **`calc` je čistý Python.** Žiadne I/O, žiadny FastAPI, žiadna databáza. Vstup = dataclass, výstup = dataclass. Dá sa spustiť a testovať samostatne.
-3. **Frontend nikdy nehovorí so Supabase priamo.** Všetok prístup k dátam ide cez API, ktoré drží `service_role` kľúč. V prehliadači nie je žiadny Supabase kľúč.
+3. **Frontend nikdy nehovorí so Supabase priamo.** Všetok prístup k dátam ide cez API, ktoré sa pripája k Postgresu ako rola `hk_api` s právami len na tabuľky kalkulačky. V prehliadači nie je žiadny Supabase kľúč ani heslo.
 4. **Peniaze sú `Decimal`** v Pythone a `numeric(14,2)` v databáze. V JSON sa posielajú ako reťazce (`"1216.04"`), aby sa nestratila presnosť.
 
 ## 2. Štruktúra repozitára (cieľová)
@@ -165,15 +165,14 @@ Prefix `/api/v1`. Všetky telá sú JSON, sumy sú reťazce s dvoma desatinnými
 - `routers/` – len HTTP: parsovanie, hlavičky, mapovanie chýb na status kódy.
 - `schemas/` – Pydantic modely; konverzia na `calc.models` cez `to_domain()`.
 - `calc/` – čistá logika (pozri 5).
-- `db/` – jediné miesto, kde sa volá Supabase (`supabase-py`, `service_role` kľúč). Repozitáre sú injektované cez `Depends`, v testoch sa nahrádzajú fake implementáciou.
+- `db/` – jediné miesto, kde sa volá databáza (`psycopg` + `psycopg_pool`, rola `hk_api` cez Supabase pooler v session móde). Repozitáre sú injektované cez `Depends`, v testoch sa nahrádzajú fake implementáciou; `tests/api/test_postgres_integration.py` (`pytest -m integration`) overuje skutočnú DB.
 - Log výpočtu sa zapisuje cez `BackgroundTasks`, aby nespomalil odpoveď; výnimky sa iba zalogujú.
 
 ### Konfigurácia (env)
 
 | Premenná | Popis |
 | --- | --- |
-| `SUPABASE_URL` | URL projektu |
-| `SUPABASE_SERVICE_ROLE_KEY` | Tajný kľúč, **len** na serveri |
+| `DATABASE_URL` | `postgresql://hk_api.<ref>:<heslo>@aws-1-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require` – heslo **len** v `api/.env` |
 | `CORS_ORIGINS` | Čiarkou oddelené povolené originy frontendu |
 | `PUBLIC_APP_URL` | Základ pre zdieľacie odkazy |
 | `CALC_LOG_ENABLED` | `true`/`false` |
@@ -246,7 +245,10 @@ Retencia: `pg_cron` úloha raz denne `delete from calculation_log where created_
 
 ### Bezpečnosť
 
-- RLS je **zapnuté** na oboch tabuľkách a **nie sú** definované žiadne politiky pre `anon` ani `authenticated`; navyše `revoke all` pre tieto roly. Prístup má len `service_role` (API). Supabase advisor to hlási ako INFO `rls_enabled_no_policy` – je to zámer.
+- RLS je **zapnuté** na oboch tabuľkách; `anon` a `authenticated` nemajú žiadne politiky a navyše `revoke all`.
+- API používa vlastnú rolu `hk_api` (migrácia `api_role`): `select/insert/update/delete` na `scenarios`, len `insert` na `calculation_log`, RLS politiky iba pre túto rolu. Nemá `bypassrls`, nevidí iné tabuľky ani `auth.users`, limit 10 spojení.
+- Heslo roly sa nastavuje mimo repozitára príkazom `alter role hk_api with login password '<SCRAM hash>'` – do Supabase ide len hash, čisté heslo je len v `api/.env`.
+- Prečo nie `service_role` kľúč: obchádza RLS a má prístup ku všetkému; navyše ho Supabase MCP nevie vydať, kým rolu s heslom vytvoriť vie.
 - Vlastníctvo scenára kontroluje API: každý dotaz na `scenarios` obsahuje `where client_id = :client_id`.
 - `client_id` je fakticky tajomstvo nositeľa (bearer). Kto ho pozná, vidí scenáre daného prehliadača. Rizikom sa zaoberá `04-review.md`.
 
