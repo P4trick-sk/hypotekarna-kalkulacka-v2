@@ -47,8 +47,8 @@ Plán je rozdelený na fázy, ktoré zodpovedajú hodinám na vyučovaní (sessi
 
 ## Fáza 5 – Frontend: grafy, harmonogram (session 8)
 
-- [ ] `BalanceChart`, `YearlyChart` s prístupnými tooltipmi (F5) + test F09
-- [ ] `ScheduleTable` ročne/mesačne, *Stiahnuť CSV* (F6)
+- [x] `BalanceChart`, `YearlyChart` s prístupnými tooltipmi (F5) + test F09
+- [x] `ScheduleTable` ročne/mesačne, *Stiahnuť CSV* (F6)
 
 ## Fáza 6 – Frontend: scenáre a zdieľanie (session 9)
 
