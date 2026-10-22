@@ -39,11 +39,11 @@ Plán je rozdelený na fázy, ktoré zodpovedajú hodinám na vyučovaní (sessi
 
 ## Fáza 4 – Frontend: kalkulačka (session 6–7)
 
-- [ ] Vite + React + TS, `api/client.ts`, typy podľa schém API
-- [ ] `LoanForm` (F1, F2), `parseNumber`, `validate` + testy F01, F04, F06
-- [ ] `useCalculation` (debounce, abort) + test F03, F05
-- [ ] `Summary`, `BreakdownBar` (F4)
-- [ ] Mena, téma, `localStorage` (F7–F9) + test F07
+- [x] Vite + React + TS, `api/client.ts`, typy podľa schém API
+- [x] `LoanForm` (F1, F2), `parseNumber`, `validate` + testy F01, F04, F06
+- [x] `useCalculation` (debounce, abort) + test F03, F05
+- [x] `Summary`, `BreakdownBar` (F4)
+- [x] Mena, téma, `localStorage` (F7–F9) + test F07
 
 ## Fáza 5 – Frontend: grafy, harmonogram (session 8)
 
