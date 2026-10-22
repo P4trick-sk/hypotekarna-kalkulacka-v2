@@ -4,16 +4,27 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from .amortization import ZERO, build_schedule, round2
+from .amortization import ZERO, build_schedule, monthly_payment, round2
 from .models import CalculationResult, LoanInput, ScheduleResult, Summary
 from .schedule import compare, yearly_rollup
 
 HUNDRED = Decimal(100)
 
 
+def monthly_escrow(inp: LoanInput) -> Decimal:
+    """Daň a poistenie na mesiac; neovplyvňujú zostatok úveru."""
+    return round2((inp.tax_yearly + inp.insurance_yearly) / 12)
+
+
+def monthly_total(inp: LoanInput) -> Decimal:
+    """Celková mesačná splátka bez zostavenia harmonogramu (pre zoznam scenárov)."""
+    pmt = monthly_payment(inp.loan_amount, inp.annual_rate, inp.payments)
+    return pmt + round2(inp.extra_monthly) + monthly_escrow(inp)
+
+
 def summary(inp: LoanInput, result: ScheduleResult) -> Summary:
     loan = inp.loan_amount
-    escrow = round2((inp.tax_yearly + inp.insurance_yearly) / 12)
+    escrow = monthly_escrow(inp)
     first = result.rows[0]
     first_extra = min(inp.extra_monthly, first.principal)
     total_interest = result.total_interest

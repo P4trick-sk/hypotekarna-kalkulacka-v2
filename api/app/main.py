@@ -12,7 +12,7 @@ from slowapi.util import get_remote_address
 
 from .config import Settings, get_settings
 from .db.repos import DatabaseUnavailable
-from .routers import calculate, health
+from .routers import calculate, health, scenarios
 from .schemas.errors import ApiError, ErrorItem, ErrorResponse
 
 API_PREFIX = "/api/v1"
@@ -66,6 +66,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(health.router, prefix=API_PREFIX)
     app.include_router(calculate.router, prefix=API_PREFIX)
+    app.include_router(scenarios.router, prefix=API_PREFIX)
     return app
 
 

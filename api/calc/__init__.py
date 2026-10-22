@@ -3,7 +3,7 @@
 from .amortization import build_schedule, monthly_payment
 from .export import csv_filename, to_csv
 from .models import CalculationResult, LoanInput, ValidationError, YearMonth
-from .summary import calculate
+from .summary import calculate, monthly_total
 from .validation import validate
 
 __all__ = [
@@ -15,6 +15,7 @@ __all__ = [
     "calculate",
     "csv_filename",
     "monthly_payment",
+    "monthly_total",
     "to_csv",
     "validate",
 ]

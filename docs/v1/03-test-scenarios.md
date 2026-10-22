@@ -81,7 +81,7 @@ Spoločné: prvá splátka `2026-11`, daň a poistenie 0, ak nie je uvedené ina
 
 | ID | Scenár | Očakávanie |
 | --- | --- | --- |
-| D01 | `select` z `scenarios` ako rola `anon` | 0 riadkov (RLS) |
+| D01 | `select` z `scenarios` ako rola `anon` | `permission denied` (RLS + `revoke`) |
 | D02 | `insert` do `calculation_log` ako `anon` | zamietnuté |
 | D03 | `name` dlhé 101 znakov | porušenie `check` |
 | D04 | dva scenáre s rovnakým `share_slug` | porušenie `unique` |

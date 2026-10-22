@@ -139,3 +139,9 @@ def test_sooner_text_plurals(months: int, text: str) -> None:
 
 def test_no_baseline_without_extra(default_input) -> None:  # type: ignore[no-untyped-def]
     assert calculate(default_input).baseline is None
+
+
+def test_monthly_total_matches_summary(default_input) -> None:  # type: ignore[no-untyped-def]
+    from calc import monthly_total
+
+    assert monthly_total(default_input) == calculate(default_input).summary.monthly_total

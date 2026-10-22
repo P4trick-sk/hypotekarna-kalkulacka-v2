@@ -45,7 +45,7 @@ hypotekarna-kalkulacka-v2/
 │   ├── app/
 │   │   ├── main.py         FastAPI app, CORS, routery
 │   │   ├── config.py       nastavenia z env (pydantic-settings)
-│   │   ├── routers/        calculate.py, export.py, scenarios.py, share.py, health.py
+│   │   ├── routers/        calculate.py (+ CSV export), scenarios.py (+ zdieľanie), health.py
 │   │   ├── schemas/        loan.py, result.py, scenario.py, errors.py
 │   │   └── db/             client.py, scenarios_repo.py, log_repo.py
 │   ├── calc/               vlastné Python skripty – výpočtová logika
@@ -63,8 +63,8 @@ hypotekarna-kalkulacka-v2/
 └── supabase/
     ├── config.toml
     └── migrations/
-        ├── 0001_scenarios.sql
-        └── 0002_calculation_log.sql
+        ├── 20261022065416_scenarios.sql
+        └── 20261022065422_calculation_log.sql
 ```
 
 ## 3. Frontend (React)
@@ -94,7 +94,7 @@ Prefix `/api/v1`. Všetky telá sú JSON, sumy sú reťazce s dvoma desatinnými
 | Metóda | Cesta | Popis | Hlavičky |
 | --- | --- | --- | --- |
 | `GET` | `/health` | `{"status":"ok","db":"ok"}` | – |
-| `POST` | `/calculate` | Súhrn + mesačný a ročný harmonogram + porovnanie bez mimoriadnej splátky | `X-Log: 0/1` |
+| `POST` | `/calculate` | Súhrn + mesačný a ročný harmonogram + porovnanie bez mimoriadnej splátky | `X-Log: 0/1`, `X-Log-Source: live/scenario` |
 | `POST` | `/export/csv` | Rovnaký vstup ako `/calculate`, vráti `text/csv` s `Content-Disposition` | – |
 | `GET` | `/scenarios` | Zoznam scenárov aktuálneho klienta | `X-Client-Id` |
 | `POST` | `/scenarios` | Vytvorí scenár `{name, inputs, currency}` | `X-Client-Id` |
@@ -246,7 +246,7 @@ Retencia: `pg_cron` úloha raz denne `delete from calculation_log where created_
 
 ### Bezpečnosť
 
-- RLS je **zapnuté** na oboch tabuľkách a **nie sú** definované žiadne politiky pre `anon` ani `authenticated`. Prístup má len `service_role` (API).
+- RLS je **zapnuté** na oboch tabuľkách a **nie sú** definované žiadne politiky pre `anon` ani `authenticated`; navyše `revoke all` pre tieto roly. Prístup má len `service_role` (API). Supabase advisor to hlási ako INFO `rls_enabled_no_policy` – je to zámer.
 - Vlastníctvo scenára kontroluje API: každý dotaz na `scenarios` obsahuje `where client_id = :client_id`.
 - `client_id` je fakticky tajomstvo nositeľa (bearer). Kto ho pozná, vidí scenáre daného prehliadača. Rizikom sa zaoberá `04-review.md`.
 

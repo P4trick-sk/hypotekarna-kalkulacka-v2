@@ -30,10 +30,10 @@ Plán je rozdelený na fázy, ktoré zodpovedajú hodinám na vyučovaní (sessi
 
 ## Fáza 3 – Supabase (session 5)
 
-- [ ] `supabase init`, migrácie `0001_scenarios.sql`, `0002_calculation_log.sql`
-- [ ] RLS zapnuté, bez politík; trigger `updated_at`; `pg_cron` retencia
-- [ ] pgTAP testy D01–D06
-- [ ] `db/` repozitáre v API + endpointy scenárov a zdieľania + testy A05, A06, A09–A19
+- [x] `supabase init`, migrácie `scenarios`, `calculation_log` (aplikované do cloudu cez Supabase MCP)
+- [x] RLS zapnuté, bez politík; trigger `updated_at`; `pg_cron` retencia
+- [x] pgTAP testy D01–D06
+- [x] `db/` repozitáre v API + endpointy scenárov a zdieľania + testy A05, A06, A09–A19
 
 **Hotovo, keď:** scenár sa dá cez `curl` vytvoriť, zdieľať a načítať cez slug.
 
