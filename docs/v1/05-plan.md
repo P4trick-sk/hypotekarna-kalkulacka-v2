@@ -52,8 +52,8 @@ Plán je rozdelený na fázy, ktoré zodpovedajú hodinám na vyučovaní (sessi
 
 ## Fáza 6 – Frontend: scenáre a zdieľanie (session 9)
 
-- [ ] `clientId.ts`, `ScenarioList` (F11)
-- [ ] Router, `ShareView` na `/s/:slug` (F12) + test F08
+- [x] `clientId.ts`, `ScenarioList` (F11)
+- [x] Router, `ShareView` na `/s/:slug` (F12) + test F08
 
 ## Fáza 7 – Nasadenie a odovzdanie (session 10)
 
