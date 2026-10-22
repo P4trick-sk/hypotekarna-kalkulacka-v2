@@ -22,9 +22,9 @@ Plán je rozdelený na fázy, ktoré zodpovedajú hodinám na vyučovaní (sessi
 
 ## Fáza 2 – API bez databázy (session 4)
 
-- [ ] FastAPI app, `config.py`, CORS, `GZipMiddleware`
-- [ ] `/health`, `/calculate`, `/export/csv` + testy A01–A04, A07, A08, A20
-- [ ] Jednotný formát chýb `{errors: [...]}`
+- [x] FastAPI app, `config.py`, CORS, `GZipMiddleware`
+- [x] `/health`, `/calculate`, `/export/csv` + testy A01–A04, A07, A08, A20
+- [x] Jednotný formát chýb `{errors: [...]}`
 
 **Hotovo, keď:** `curl` na `/calculate` vráti C01 hodnoty.
 
